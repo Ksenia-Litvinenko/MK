@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker Terminal</title>
+    <style>
+        :root {
+            --primary: #6a0dad;
+            --secondary: #f3e5f5;
+            --accent: #9c27b0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        /* Поле вводу */
+        #display {
+            width: 400px;
+            height: 50px;
+            font-size: 24px;
+            border: 3px solid var(--primary);
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            background: white;
+            color: var(--primary);
+            outline: none;
+        }
+
+        /* Коробка */
+        #box-container {
+            font-size: 80px;
+            margin-bottom: 30px;
+            transition: transform 0.3s;
+        }
+
+        .shaking {
+            animation: shake 0.2s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            50% { transform: translate(-1px, -2px) rotate(-1deg); }
+            100% { transform: translate(1px, 1px) rotate(0deg); }
+        }
+
+        /* Клавіатура */
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            background: var(--primary);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .key {
+            width: 45px;
+            height: 45px;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .key:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .key.wide {
+            grid-column: span 2;
+            width: 100%;
+            background: #ffeb3b;
+        }
+
+        /* Екран зламу */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            animation: blink 0.5s infinite;
+        }
+
+        .alert-box {
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            padding: 40px;
+            border: 5px solid white;
+            border-radius: 20px;
+            font-size: 40px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 0 50px black;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Введіть слово "logika" для взламу паролів</h1>
+    
+    <div id="box-container">📦</div>
+
+    <input type="text" id="display" readonly placeholder="Чекаю на ввід...">
+
+    <div class="keyboard">
+        <button class="key">q</button><button class="key">w</button><button class="key">e</button>
+        <button class="key">r</button><button class="key">t</button><button class="key">y</button>
+        <button class="key">u</button><button class="key">i</button><button class="key">o</button>
+        <button class="key">p</button>
+        <button class="key">a</button><button class="key">s</button><button class="key">d</button>
+        <button class="key">f</button><button class="key">g</button><button class="key">h</button>
+        <button class="key">j</button><button class="key">k</button><button class="key">l</button>
+        <button class="key" onclick="clearInput()">C</button>
+        <button class="key">z</button><button class="key">x</button><button class="key">c</button>
+        <button class="key">v</button><button class="key">b</button><button class="key">n</button>
+        <button class="key">m</button>
+        <button class="key wide" onclick="checkPassword()">ENTER</button>
+    </div>
+
+    <div id="overlay">
+        <div class="alert-box">О НІ! Наша система зламана!</div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        const box = document.getElementById('box-container');
+        const overlay = document.getElementById('overlay');
+        const keys = document.querySelectorAll('.key:not(.wide):not([onclick])');
+
+        // Додавання літер при натисканні
+        keys.forEach(key => {
+            key.addEventListener('click', () => {
+                display.value += key.innerText;
+            });
+        });
+
+        function clearInput() {
+            display.value = '';
+        }
+
+        function checkPassword() {
+            if (display.value.toLowerCase() === 'logika') {
+                // Ефект вибуху
+                box.classList.add('shaking');
+                box.innerText = '💥';
+                
+                setTimeout(() => {
+                    overlay.style.display = 'flex';
+                }, 500);
+            } else {
+                alert("Невірний пароль! Спробуй ще раз.");
+                clearInput();
+            }
+        }
+    </script>
+</body>
+</html>
